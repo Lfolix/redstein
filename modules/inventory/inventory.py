@@ -15,7 +15,7 @@ current_slots = [
 
 slots_interface = [
     (0, 0),
-    (64, 64)
+    (80, 15)
 ]
 
 open = False
@@ -61,6 +61,7 @@ def draw(screen, player, map):
                 # Проверка, находится ли мышь над предметом
                 if i.rect.collidepoint(pg.mouse.get_pos()):
                     screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
+                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
                     if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
                         deleted_item = i
                         player.inventory.remove(deleted_item)
@@ -79,6 +80,7 @@ def draw(screen, player, map):
                 # Проверка, находится ли мышь над предметом
                 if i.rect.collidepoint(pg.mouse.get_pos()):
                     screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
+                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
                     if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
                         deleted_item = i
                         player.current_inventory.remove(deleted_item)
@@ -111,6 +113,7 @@ def draw(screen, player, map):
                 # Проверка, находится ли мышь над предметом
                 if i.rect.collidepoint(pg.mouse.get_pos()):
                     screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
+                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
                     if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
                         deleted_item = i
                         player.current_inventory.remove(deleted_item)
