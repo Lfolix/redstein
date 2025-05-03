@@ -39,6 +39,7 @@ class Map:
         self.objects = config["objects"]
         self.hostiles = config["hostiles"]
         self.all_items = config["items"]
+        self.mining = config["mining"]
         self.player = player
 
     def draw(self, screen):
@@ -59,6 +60,9 @@ class Map:
         for i in self.hostiles:
             i.draw(screen)
             i.following()
+
+        for i in self.mining:
+            i.draw(screen, self.player, self.all_items)
 
 
 # Characters
@@ -164,7 +168,7 @@ class Enemy(Entity):
             self.following()
 
 class ItemEntity:
-    def __init__(self, image, name, type, speed = 0, health = 50, damage = 10):
+    def __init__(self, image, name, type, id, speed = 0, health = 50, damage = 10):
         self.image, self.speed, self.health = image, speed, health
         self.alive = True
         self.damage = damage
@@ -172,9 +176,9 @@ class ItemEntity:
         self.inventory = []
         self.name = name
         self.type = type
+        self.id = id
 
     def draw(self, screen, slot):
-        mouse_pos = pg.mouse.get_pos()
 
         if self.alive:
             self.rect = pg.Rect(slot[0], slot[1], 100, 100)
@@ -198,38 +202,46 @@ class DroppedItem:
             self.rect.topleft = self.x, self.y
 
             if self.rect.colliderect(self.player.rect):
-                if self.item.type == "weapon":
-                    if len(self.player.current_inventory) < 1: 
-                        self.player.current_inventory.append(self.item)
-
-                else:
-                    self.player.inventory.append(self.item)
+                self.player.inventory.append(self.item)
 
                 self.alive = False
+                self.x += 142352354
                 self.player.damage += self.item.damage
 
 class MineObject(Entity):
-    def __init__(self, image, x, y, speed=0, health=50, damage=10, item=None):
+    def __init__(self, image, x, y, player, speed=0, health=50, damage=10, item=None):
         super().__init__(image, x, y, speed, health, damage)
         self.item = item
         self.alive = True
+        self.player = player
         self.rect = pg.Rect(self.x, self.y, 64, 64)
 
-    def draw(self, screen, player, map):
+    def draw(self, screen, player, map_items):
         key = pg.mouse.get_pressed()
+        
         if self.alive:
             self.rect.topleft = self.x, self.y
             screen.blit(self.image, (self.x, self.y))
+            
             if self.rect.colliderect(player.rect):
-                if key[0]:
+                if key[0]:  # Если нажата левая кнопка мыши
+                    print(0)
                     self.health -= self.player.damage
 
-        if self.health < 0:
-            self.alive = False
-            map["items"].append(DroppedItem(self.item.image, self.x, self.y + 100, player, self.item))
+            # Проверяем здоровье после возможного урона
+            if self.health <= 0:
+                self.alive = False
+                map_items.append(DroppedItem(self.item.image, self.x, self.y + 100, player, self.item))
 
+        # Если объект мертв (не жив), не отрисовываем его
+        if not self.alive:
+            self.x += 34653456
+            return  # Выход из метода draw без отрисовки
         
+class ItemIDGenerator:
+    def __init__(self):
+        self.current_id = 0
 
-
-        
-
+    def get_next_id(self):
+        self.current_id += 1
+        return self.current_id

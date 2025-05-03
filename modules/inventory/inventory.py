@@ -2,10 +2,11 @@ import pygame as pg
 import objects as obj
 import time
 
+pg.init()
 
 slots = [
     (280, 260),
-    (64, 64)
+    (480, 260)
 ]
 
 current_slots = [
@@ -15,7 +16,7 @@ current_slots = [
 
 slots_interface = [
     (0, 0),
-    (80, 15)
+    (64, 0)
 ]
 
 open = False
@@ -31,95 +32,64 @@ properties = pg.image.load("modules/inventory/properties.png")
 def draw(screen, player, map):
     global open
     global sur_slot
+
     key = pg.key.get_pressed()
+    mouse_key = pg.mouse.get_pressed()
+    mouse_pos = pg.mouse.get_pos()
 
     if key[pg.K_i]:
-        if not open:  # Если инвентарь закрыт, открываем его
+        if not open:
             open = True
-            time.sleep(0.2)  # Задержка для предотвращения многократных нажатий
-        else:  # Если инвентарь открыт, закрываем его
+            time.sleep(0.2)
+        else:
             open = False
             time.sleep(0.2)
 
     if open:
-        # Очистка экрана (или рисование фона)
-        screen.fill((0, 0, 0))  # Заполните экран черным цветом или используйте другой фон
+        screen.fill((0, 0, 0))
 
-        print("slot:", sur_slot)
-
-        # Отрисовка фона инвентаря
+        sur_slot = -1
         screen.blit(image, (0, 0))
 
-        sur_slot = -1
-        sur_slot_cur = -1
+        for i in player.inventory:
+            sur_slot += 1
 
-        if len(player.inventory) >= 1:
-            for i in player.inventory:
-                sur_slot += 1
-                i.draw(screen, slots[sur_slot])  # Передаем screen, а не image
+            if sur_slot >= len(slots):
+                sur_slot = -1
 
-                # Проверка, находится ли мышь над предметом
-                if i.rect.collidepoint(pg.mouse.get_pos()):
-                    screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
-                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
-                    if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
-                        deleted_item = i
-                        player.inventory.remove(deleted_item)
-                        map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 125, player, i))
+            i.draw(screen, slots[sur_slot])
 
-                    if pg.mouse.get_pressed()[0]:  # Если нажата левая кнопка мыши
-                        removed_item = i
-                        player.inventory.remove(removed_item)
-                        player.current_inventory.append(i)
 
-        if len(player.current_inventory) >= 1:
-            for i in player.current_inventory:
-                sur_slot_cur += 1
-                i.draw(screen, current_slots[sur_slot_cur])  # Передаем screen, а не image
+            if i.rect.collidepoint(mouse_pos):
+                if key[pg.K_e]:
+                    time.sleep(0.3)
+                    player.current_inventory.append(i)
+                    player.inventory.remove(i)
 
-                # Проверка, находится ли мышь над предметом
-                if i.rect.collidepoint(pg.mouse.get_pos()):
-                    screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
-                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
-                    if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
-                        deleted_item = i
-                        player.current_inventory.remove(deleted_item)
-                        map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 125, player, i))
+                if key[pg.K_r]:
+                    time.sleep(0.3)
+                    map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 100, player, i))
+                    player.inventory.remove(i)
 
-                    if pg.mouse.get_pressed()[0]:  # Если нажата левая кнопка мыши
-                        removed_item = i
-                        player.current_inventory.remove(removed_item)
-                        player.inventory.append(removed_item)
 
-        # Проверка на выход за пределы слотов
-        if sur_slot >= len(slots):
-            sur_slot = -1
+        for i in player.current_inventory:
+            sur_slot += 1
 
-        if sur_slot_cur >= len(current_slots):
-            sur_slot = -1
+            if sur_slot >= len(slots):
+                sur_slot = -1
 
-                # Отрисовка фона инвентаря
+            print(sur_slot)
 
-    if not open:
-        screen.blit(image_interface, (0, 0))
+            i.draw(screen, current_slots[sur_slot])
 
-        sur_slot = -1
 
-        if len(player.current_inventory) >= 1:
-            for i in player.current_inventory:
-                sur_slot += 1
-                i.draw(screen, slots_interface[sur_slot])  # Передаем screen, а не image
+            if i.rect.collidepoint(mouse_pos):
+                if key[pg.K_e]:
+                    time.sleep(0.3)
+                    player.inventory.append(i)
+                    player.current_inventory.remove(i)
 
-                # Проверка, находится ли мышь над предметом
-                if i.rect.collidepoint(pg.mouse.get_pos()):
-                    screen.blit(properties, (pg.mouse.get_pos()[0], pg.mouse.get_pos()[1]))
-                    properties.blit(pg.font.Font(None, 30).render(i.name, True, (255, 255, 255)), (30, 20))
-                    if pg.mouse.get_pressed()[2]:  # Если нажата левая кнопка мыши
-                        deleted_item = i
-                        player.current_inventory.remove(deleted_item)
-                        map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 125, player, i))
-
-        # Проверка на выход за пределы слотов
-        if sur_slot >= len(slots_interface):
-            sur_slot = -1
-
+                if key[pg.K_r]:
+                    time.sleep(0.3)
+                    map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 90, player, i))
+                    player.current_inventory.remove(i)

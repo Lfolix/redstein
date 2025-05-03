@@ -14,6 +14,7 @@ pg.init()
 
 
 player = obj.Player("characters/player_1.png", 0, 0, 3)
+id = obj.ItemIDGenerator()
 
 
 map_1_config = {
@@ -50,7 +51,11 @@ map_1_config = {
     ],
 
     "items" : [
-        obj.DroppedItem(pg.image.load("items/sword.png"), 100, 100, player, obj.ItemEntity(pg.image.load("items/sword.png"), "Sword", type="weapon"))
+        obj.DroppedItem(pg.image.load("images/Wood.png"), 600, 600, player, obj.ItemEntity(pg.image.load("images/Wood.png"), "ва", type="weapon", id=1, damage=5))
+    ],
+
+    "mining" : [
+        obj.MineObject("images/Wood.png", 500, 500, player=player, health = 10, item=obj.ItemEntity(pg.image.load("items/sword.png"), "ва", type="fgh", id=2, damage=5))
     ]
 }
 
@@ -84,7 +89,11 @@ map_2_config = {
     ],
 
     "items" : [
-        obj.DroppedItem("characters/player_1.png", 100, 100, player, obj.ItemEntity("characters/player_1.png", 0, 0))
+        
+    ],
+    
+    "mining" : [
+        
     ]
 }
 
