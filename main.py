@@ -51,11 +51,13 @@ map_1_config = {
     ],
 
     "items" : [
-        obj.DroppedItem(pg.image.load("images/Wood.png"), 600, 600, player, obj.ItemEntity(pg.image.load("images/Wood.png"), "ва", type="weapon", id=1, damage=5))
+        obj.DroppedItem(pg.image.load("items/sword.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/sword.png"), "ва", type="weapon", id=1, damage=5)),
+        obj.DroppedItem(pg.image.load("items/bow.png"), 700, 600, player, obj.ItemEntity(pg.image.load("items/bow.png"), "ва", type="weapon", id=1, damage=3)),
+        obj.DroppedItem(pg.image.load("items/musket.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/musket.png"), "ва", type="weapon", id=1, damage=15))
     ],
 
     "mining" : [
-        obj.MineObject("images/Wood.png", 500, 500, player=player, health = 10, item=obj.ItemEntity(pg.image.load("items/sword.png"), "ва", type="fgh", id=2, damage=5))
+        
     ]
 }
 

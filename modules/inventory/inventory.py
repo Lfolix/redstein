@@ -6,7 +6,9 @@ pg.init()
 
 slots = [
     (280, 260),
-    (480, 260)
+    (400, 260),
+    (280, 400),
+    (400, 400),
 ]
 
 current_slots = [
@@ -62,9 +64,10 @@ def draw(screen, player, map):
 
             if i.rect.collidepoint(mouse_pos):
                 if key[pg.K_e]:
-                    time.sleep(0.3)
-                    player.current_inventory.append(i)
-                    player.inventory.remove(i)
+                    if len(player.current_inventory) - 1 < len(current_slots) - 1:
+                        time.sleep(0.3)
+                        player.current_inventory.append(i)
+                        player.inventory.remove(i)
 
                 if key[pg.K_r]:
                     time.sleep(0.3)
@@ -75,7 +78,7 @@ def draw(screen, player, map):
         for i in player.current_inventory:
             sur_slot += 1
 
-            if sur_slot >= len(slots):
+            if sur_slot >= len(current_slots) - 1:
                 sur_slot = -1
 
             print(sur_slot)
@@ -85,11 +88,12 @@ def draw(screen, player, map):
 
             if i.rect.collidepoint(mouse_pos):
                 if key[pg.K_e]:
-                    time.sleep(0.3)
-                    player.inventory.append(i)
-                    player.current_inventory.remove(i)
+                    if len(player.inventory) - 1 < len(slots) - 1:
+                        time.sleep(0.3)
+                        player.inventory.append(i)
+                        player.current_inventory.remove(i)
 
                 if key[pg.K_r]:
                     time.sleep(0.3)
-                    map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 90, player, i))
+                    map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 100, player, i))
                     player.current_inventory.remove(i)
