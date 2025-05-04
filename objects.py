@@ -1,5 +1,9 @@
 import pygame as pg
 
+import sys
+sys.path.append("modules/")
+import sounds
+
 
 pg.init()
 
@@ -97,6 +101,7 @@ class Player(Entity):
             screen.blit(self.image, (self.x, self.y))
             self.rect.topleft = (self.x, self.y)
             self.walk()
+            print(self.attack_distance)
 
         if self.health <= 0:
             self.alive = False
@@ -146,10 +151,11 @@ class Enemy(Entity):
                 self.timer = 0
 
     def attack(self):
+        key = pg.key.get_pressed()
         if self.alive:
             if self.player.alive:
                 if self.rect.colliderect(self.player.rect):
-                    key = pg.key.get_pressed()
+                    print(23)
 
                     self.player.health -= self.damage
                     self.player.x -= 20
@@ -157,8 +163,15 @@ class Enemy(Entity):
 
 
                     if key[pg.K_SPACE]:
-                        if self.rect.colliderect(self.player.attack_rect):
-                            self.health -= self.player.damage
+                        self.health -= self.player.damage
+
+                else:
+                    if key[pg.K_RETURN]:
+                        for i in self.player.current_inventory:
+                            if i.type == "distance_weapon":
+                                sounds.shot.play()
+                                self.health -= self.player.damage
+
 
     def draw(self, screen):
         if self.alive:
@@ -167,7 +180,6 @@ class Enemy(Entity):
             screen.blit(self.text_health, (self.x + 25, self.y - 15))
             screen.blit(self.image, (self.x, self.y))
             self.following()
-            print(self.health)
 
         if self.health <= 0:
             self.alive = False
