@@ -47,13 +47,13 @@ map_1_config = {
     ],
 
     "hostiles" : [
-        #obj.Enemy("characters/player_1.png", 200, 200, player, 2)
+        
     ],
 
     "items" : [
-        obj.DroppedItem(pg.image.load("items/sword.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/sword.png"), "ва", type="eat", id=1, damage=5, hunger=5)),
+        obj.DroppedItem(pg.image.load("items/sword.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/sword.png"), "ва", type="weapon", id=1, damage=5,)),
         obj.DroppedItem(pg.image.load("items/bow.png"), 700, 600, player, obj.ItemEntity(pg.image.load("items/bow.png"), "ва", type="weapon", id=1, damage=3)),
-        obj.DroppedItem(pg.image.load("items/musket.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/musket.png"), "ва", type="weapon", id=1, damage=15))
+        obj.DroppedItem(pg.image.load("items/musket.png"), 600, 600, player, obj.ItemEntity(pg.image.load("items/musket.png"), "ва", type="weapon", id=1, damage=15, attack_distance=1000))
     ],
 
     "mining" : [

@@ -86,9 +86,11 @@ class Entity:
             self.alive = False
 
 class Player(Entity):
-    def __init__(self, image, x, y, speed = 0, health = 50, damage = 10):
+    def __init__(self, image, x, y, speed = 0, health = 50, damage = 10, attack_distance = 5):
         super().__init__(image, x, y, speed, health, damage)
         self.hunger = 25
+        self.attack_distance = attack_distance
+        self.attack_rect = pg.Rect(self.rect.center[0], self.rect.center[1], self.attack_distance, self.attack_distance)
 
     def draw(self, screen):
         if self.alive:
@@ -116,16 +118,16 @@ class Player(Entity):
                 self.x += self.speed           
 
 class Enemy(Entity):
-    def __init__(self, image, x, y, player, speed, health = 50, damage = 5):
+    def __init__(self, image, x, y, player, speed, health = 50, damage = 5, attack_distance = 0):
         super().__init__(image, x, y, speed, health, damage)
         self.player = player
         self.detect_rect = pg.Rect(self.x + 32, self.y + 32, 512, 512)
         self.text_health = pg.font.Font(None, 20).render(str(self.health), True, ("red"))
         self.timer = 0
+        self.attack_distance = attack_distance
 
     def following(self):
         if self.player.rect.colliderect(self.detect_rect):
-            print(self.player.x)
             if self.x > self.player.x:
                 self.x -= self.speed
 
@@ -146,18 +148,17 @@ class Enemy(Entity):
 
     def attack(self):
         if self.alive:
-            if self.rect.colliderect(self.player.rect):
-                if self.player.alive:
-                    mouse = pg.mouse.get_pos()
-                    key = pg.mouse.get_pressed()
+            if self.player.alive:
+                if self.rect.colliderect(self.player.rect):
+                    key = pg.key.get_pressed()
 
                     self.player.health -= self.damage
                     self.player.x -= 20
                     self.x += 20
 
-                    if self.rect.collidepoint(mouse[0], mouse[1]): 
-                        print(mouse[0], mouse[1])
-                        if key[0]:
+
+                    if key[pg.K_SPACE]:
+                        if self.rect.colliderect(self.player.attack_rect):
                             self.health -= self.player.damage
 
     def draw(self, screen):
@@ -167,12 +168,17 @@ class Enemy(Entity):
             screen.blit(self.text_health, (self.x + 25, self.y - 15))
             screen.blit(self.image, (self.x, self.y))
             self.following()
+            print(self.health)
+
+        if self.health <= 0:
+            self.alive = False
 
 class ItemEntity:
-    def __init__(self, image, name, type, id, speed = 0, health = 50, damage = 10, hunger = 0):
+    def __init__(self, image, name, type, id, speed = 0, health = 50, damage = 10, hunger = 0, attack_distance = 0):
         self.image, self.speed, self.health, self.hunger = image, speed, health, hunger
         self.alive = True
         self.damage = damage
+        self.attack_distance = attack_distance
         self.health = health
         self.inventory = []
         self.name = name
@@ -226,7 +232,6 @@ class MineObject(Entity):
             
             if self.rect.colliderect(player.rect):
                 if key[0]:  # Если нажата левая кнопка мыши
-                    print(0)
                     self.health -= self.player.damage
 
             # Проверяем здоровье после возможного урона

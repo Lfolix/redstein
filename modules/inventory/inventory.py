@@ -89,6 +89,15 @@ def draw(screen, player, map):
             if sur_slot >= len(current_slots) - 1:
                 sur_slot = -1
 
+
+            if i.type == "distance_weapon":
+                player.attack_distance = i.attack_distance
+                player.damage = i.damage
+
+            if i.type == "weapon":
+                player.damage = i.damage
+
+
             print(sur_slot)
 
             i.draw(screen, current_slots[sur_slot])
