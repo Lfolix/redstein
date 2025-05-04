@@ -118,13 +118,12 @@ class Player(Entity):
                 self.x += self.speed           
 
 class Enemy(Entity):
-    def __init__(self, image, x, y, player, speed, health = 50, damage = 5, attack_distance = 0):
+    def __init__(self, image, x, y, player, speed, health = 50, damage = 5):
         super().__init__(image, x, y, speed, health, damage)
         self.player = player
         self.detect_rect = pg.Rect(self.x + 32, self.y + 32, 512, 512)
         self.text_health = pg.font.Font(None, 20).render(str(self.health), True, ("red"))
         self.timer = 0
-        self.attack_distance = attack_distance
 
     def following(self):
         if self.player.rect.colliderect(self.detect_rect):

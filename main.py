@@ -13,7 +13,7 @@ import current_inventory
 pg.init()
 
 
-player = obj.Player("characters/player_1.png", 0, 0, 3)
+player = obj.Player("characters/player_1.png", 0, 0, 3, attack_distance=500)
 id = obj.ItemIDGenerator()
 
 
@@ -47,7 +47,7 @@ map_1_config = {
     ],
 
     "hostiles" : [
-        
+        obj.Enemy("characters/player_1.png", 500, 500, player, 5, 20, 5)
     ],
 
     "items" : [
