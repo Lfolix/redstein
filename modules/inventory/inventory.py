@@ -65,14 +65,22 @@ def draw(screen, player, map):
             if i.rect.collidepoint(mouse_pos):
                 if key[pg.K_e]:
                     if len(player.current_inventory) - 1 < len(current_slots) - 1:
-                        time.sleep(0.3)
-                        player.current_inventory.append(i)
-                        player.inventory.remove(i)
+                        if i.type != "eat":
+                            time.sleep(0.3)
+                            player.current_inventory.append(i)
+                            player.inventory.remove(i)
 
                 if key[pg.K_r]:
                     time.sleep(0.3)
                     map["items"].append(obj.DroppedItem(i.image, player.x, player.y + 100, player, i))
                     player.inventory.remove(i)
+
+                if key[pg.K_t]:
+                    if i.type == "eat":
+                        if player.hunger < 50:
+                            time.sleep(0.3)
+                            player.hunger += i.hunger
+                            player.inventory.remove(i)
 
 
         for i in player.current_inventory:
@@ -89,9 +97,10 @@ def draw(screen, player, map):
             if i.rect.collidepoint(mouse_pos):
                 if key[pg.K_e]:
                     if len(player.inventory) - 1 < len(slots) - 1:
-                        time.sleep(0.3)
-                        player.inventory.append(i)
-                        player.current_inventory.remove(i)
+                        if i.type != "eat":
+                            time.sleep(0.3)
+                            player.inventory.append(i)
+                            player.current_inventory.remove(i)
 
                 if key[pg.K_r]:
                     time.sleep(0.3)

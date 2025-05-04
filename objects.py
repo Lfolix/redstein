@@ -88,6 +88,7 @@ class Entity:
 class Player(Entity):
     def __init__(self, image, x, y, speed = 0, health = 50, damage = 10):
         super().__init__(image, x, y, speed, health, damage)
+        self.hunger = 25
 
     def draw(self, screen):
         if self.alive:
@@ -168,8 +169,8 @@ class Enemy(Entity):
             self.following()
 
 class ItemEntity:
-    def __init__(self, image, name, type, id, speed = 0, health = 50, damage = 10):
-        self.image, self.speed, self.health = image, speed, health
+    def __init__(self, image, name, type, id, speed = 0, health = 50, damage = 10, hunger = 0):
+        self.image, self.speed, self.health, self.hunger = image, speed, health, hunger
         self.alive = True
         self.damage = damage
         self.health = health
