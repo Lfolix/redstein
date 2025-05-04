@@ -35,6 +35,8 @@ class Game:
     def set_map(self, map):
         self.map = map
 
+# Hi
+
 class Map:
     def __init__(self, config, player):
         self.tiles = config["tiles"]
