@@ -51,10 +51,29 @@ class Map:
     def draw(self, screen):
         for row_index, row in enumerate(self.tiles):
             for col_index, col in enumerate(row):
+                key = pg.key.get_pressed()
+
                 x = col_index * self.tile_size
                 y = row_index * self.tile_size
+
+                rect = pg.Rect(x, y, 64, 64)
                 
                 screen.blit(self.tile_images[col], (x, y))
+
+                if col == 3:
+                    if self.player.rect.colliderect(rect):
+                        if key[pg.K_w]:
+                            self.player.y += 5
+
+                        elif key[pg.K_s]:
+                            self.player.y -= 5
+                            
+                        elif key[pg.K_a]:
+                            self.player.x += 5
+
+                        elif key[pg.K_d]:
+                            self.player.x -= 5
+
 
         for i in self.objects:
             i.draw(screen)
@@ -226,7 +245,6 @@ class DroppedItem:
 
                 self.alive = False
                 self.x += 142352354
-                self.player.damage += self.item.damage
 
 class MineObject(Entity):
     def __init__(self, image, x, y, player, speed=0, health=50, damage=10, item=None):
